@@ -2,22 +2,19 @@ cmake_minimum_required(VERSION 3.20)
 project(fastdeploy_ppocr CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
 find_package(OpenCV COMPONENTS core imgproc)
 find_package(onnxruntime REQUIRED)
 find_package(Eigen3 REQUIRED)
 message("OpenCV_LIBS: ${OpenCV_LIBS} ${OPENCV_core_FOUND} ${OPENCV_WORLD_FOUND}")
-
-option(WITH_GPU "Whether WITH_GPU=ON, will enable onnxruntime-gpu/paddle-infernce-gpu/poros-gpu" OFF)
+set(WITH_GPU ON)
 
 if(WITH_GPU)
-    add_definitions (-Wno-format-security)
     enable_language(CUDA)
     include(cmake/cuda.cmake)
     message(STATUS "CUDA compiler: ${CMAKE_CUDA_COMPILER}, version: ${CMAKE_CUDA_COMPILER_ID} ${CMAKE_CUDA_COMPILER_VERSION}")
     add_definitions(-DWITH_GPU)
     add_definitions(-DENABLE_CUDA_PREPROCESS)
-    find_library(CUDA_LIB cudart ${CUDA_DIRECTORY}/lib64)
+    find_library(CUDA_LIB cudart ${CUDA_DIRECTORY}/lib/x64)
     include_directories(PRIVATE ${CUDA_DIRECTORY}/include)
 endif()
 
